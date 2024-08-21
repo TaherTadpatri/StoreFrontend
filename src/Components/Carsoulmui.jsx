@@ -58,7 +58,7 @@ function Carsoulmui(props) {
 }
 
 function Item(props) {
-  const imageUrl = `http://localhost:8000${props.item.image}`;
+  const imageUrl = `https://tahertadpatri.pythonanywhere.com${props.item.image}`;
 
 
   return (
