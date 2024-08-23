@@ -75,7 +75,7 @@ function ProductDetails({ product }) {
       const addProductToCart=async()=>{ 
         setCartLoading(true)
         try{ 
-          const response=await fetch('https://tahertadpatri.pythonanywhere.com/apiv2/addToCart',{ 
+          const response=await fetch('https://storebackend-production-9a2b.up.railway.app/apiv2/addToCart',{ 
             method : 'POST',
             headers: {
               "content-Type": "application/json",
