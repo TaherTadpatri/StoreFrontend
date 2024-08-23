@@ -19,7 +19,7 @@ function Carsoulmui(props) {
 
     const fetchdata = async () => {
       try {
-        const resonse = await fetch("https://tahertadpatri.pythonanywhere.com/apiv2/caursol/", {
+        const resonse = await fetch("https://storebackend-production-9a2b.up.railway.app/apiv2/caursol/", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
