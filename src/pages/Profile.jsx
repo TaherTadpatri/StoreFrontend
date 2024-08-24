@@ -38,7 +38,7 @@ function Profile() {
     
       try {
         const response = await fetch(
-          "https://tahertadpatri.pythonanywhere.com/apiv2/getUserInformation",
+          "https://frameyourmemories.up.railway.app/apiv2/getUserInformation",
           {
             method: "GET",
             headers: {

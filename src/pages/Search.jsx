@@ -18,7 +18,7 @@ function Search() {
       setloading(true);
       setError(null);
       try {
-        const response = await fetch("https://tahertadpatri.pythonanywhere.com/apiv2/search", {
+        const response = await fetch("https://frameyourmemories.up.railway.app/apiv2/search", {
           method: "POST",
           headers: {
             "content-type": "application/json",

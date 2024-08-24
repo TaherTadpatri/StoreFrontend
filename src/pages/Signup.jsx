@@ -42,7 +42,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch("https://tahertadpatri.pythonanywhere.com/api/register/", {
+      const response = await fetch("https://frameyourmemories.up.railway.app/api/register/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
