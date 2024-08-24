@@ -15,7 +15,7 @@ function Pincode() {
     setloading(true)
     try {
       const response = await fetch(
-        "https://tahertadpatri.pythonanywhere.com/apiv2/checkservice/",
+        "https://frameyourmemories.up.railway.app/apiv2/checkservice/",
         {
           method: "POST",
           headers: {

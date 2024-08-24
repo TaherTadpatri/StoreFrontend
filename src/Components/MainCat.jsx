@@ -19,7 +19,7 @@ function MainCat() {
   useEffect(() => {
     const fetchdata = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/api/categories/", {
+        const response = await fetch("https://frameyourmemories.up.railway.app/api/categories/", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });

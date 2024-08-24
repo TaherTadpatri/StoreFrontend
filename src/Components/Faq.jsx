@@ -16,7 +16,7 @@ function Faq() {
     setLoading(true);
     const fetchFaq = async () => {
       try {
-        const response = await fetch("https://storebackend-production-9a2b.up.railway.app/apiv2/faq", {
+        const response = await fetch("https://frameyourmemories.up.railway.app/apiv2/faq", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

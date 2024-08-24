@@ -20,7 +20,7 @@ export const AuthProvider = ({children}) => {
     const loginUser = async (e) => {
         e.preventDefault()
         try{
-            const response = await fetch('https://tahertadpatri.pythonanywhere.com/api/token/', {
+            const response = await fetch('https://frameyourmemories.up.railway.app/api/token/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ export const AuthProvider = ({children}) => {
     }
 
     const updateToken = async () => {
-        const response = await fetch('https://tahertadpatri.pythonanywhere.com/api/token/refresh/', {
+        const response = await fetch('https://frameyourmemories.up.railway.app/api/token/refresh/', {
             method: 'POST',
             headers: {
                 'Content-Type':'application/json'

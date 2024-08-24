@@ -19,7 +19,7 @@ function Carsoulmui(props) {
 
     const fetchdata = async () => {
       try {
-        const resonse = await fetch("https://storebackend-production-9a2b.up.railway.app/apiv2/caursol/", {
+        const resonse = await fetch("https://frameyourmemories.up.railway.app/apiv2/caursol/", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -58,7 +58,7 @@ function Carsoulmui(props) {
 }
 
 function Item(props) {
-  const imageUrl = `https://tahertadpatri.pythonanywhere.com${props.item.image}`;
+  const imageUrl = `https://frameyourmemories.up.railway.app${props.item.image}`;
 
 
   return (
@@ -84,7 +84,7 @@ function Item(props) {
 }
 
 function DesktopItem(props) {
-  const imageUrl = `http://localhost:8000${props.item.image}`;
+  const imageUrl = `https://frameyourmemories.up.railway.app${props.item.image}`;
 
   return (
     <Grid container>

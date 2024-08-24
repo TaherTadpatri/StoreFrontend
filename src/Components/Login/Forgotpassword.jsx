@@ -33,7 +33,7 @@ function Forgotpassword() {
     sendSetOtpLoading(true)
     const sendOtpRequest = async () => {
       try {
-        const response = await fetch("https://tahertadpatri.pythonanywhere.com/apiv2/getOtp", {
+        const response = await fetch("https://frameyourmemories.up.railway.app/apiv2/getOtp", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -66,7 +66,7 @@ function Forgotpassword() {
     const verifyOtp = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/apiv2/validateOtp",
+          "https://frameyourmemories.up.railway.app/apiv2/validateOtp",
           {
             method: "POST",
             headers: {
@@ -97,7 +97,7 @@ function Forgotpassword() {
     setLoading(true)
     const handlePasswordRequest = async()=>{ 
         try{ 
-            const response= await fetch('https://tahertadpatri.pythonanywhere.com/apiv2/changePassword',{ 
+            const response= await fetch('https://frameyourmemories.up.railway.app/apiv2/changePassword',{ 
                 method : 'POST',
                 headers: { 
                     'Content-Type': 'application/json',

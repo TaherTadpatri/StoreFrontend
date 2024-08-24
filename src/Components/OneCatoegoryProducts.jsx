@@ -15,7 +15,7 @@ function OneCatoegoryProducts() {
     const fetchcatdata = async () => {
       try {
         const resonse = await fetch(
-          "https://tahertadpatri.pythonanywhere.com/apiv2/catproducts/",
+          "https://frameyourmemories.up.railway.app/apiv2/catproducts/",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

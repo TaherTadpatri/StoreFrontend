@@ -23,7 +23,7 @@ export const CartProvider =({children}) =>{
 
     const fetchcart = async () => {
         try {
-          const response = await fetch("https://tahertadpatri.pythonanywhere.com/apiv2/cart/", {
+          const response = await fetch("https://frameyourmemories.up.railway.app/apiv2/cart/", {
             method: "GET",
             headers: {
               "content-Type": "application/json",
@@ -51,7 +51,7 @@ export const CartProvider =({children}) =>{
     },[cart])
     const updatecart = async() =>{ 
         try { 
-            const response = await fetch('https://tahertadpatri.pythonanywhere.com/apiv2/updateCart',{ 
+            const response = await fetch('https://frameyourmemories.up.railway.app/apiv2/updateCart',{ 
                 method : 'POST',
                 headers: {
                     "content-Type": "application/json",

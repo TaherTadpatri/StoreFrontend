@@ -8,7 +8,7 @@ function CartProduct({data}) {
             setLoading(true)
             setError(false) 
             try{ 
-                const response= await fetch('https://tahertadpatri.pythonanywhere.com/apiv2/cartproducts/',{ 
+                const response= await fetch('https://frameyourmemories.up.railway.app/apiv2/cartproducts/',{ 
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',

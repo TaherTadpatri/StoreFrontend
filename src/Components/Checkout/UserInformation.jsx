@@ -44,7 +44,7 @@ function UserInformation() {
       setloading(true);
       try {
         const response = await fetch(
-          "https://tahertadpatri.pythonanywhere.com/apiv2/getUserAddress/",
+          "https://frameyourmemories.up.railway.app/apiv2/getUserAddress/",
           {
             method: "GET",
             headers: {

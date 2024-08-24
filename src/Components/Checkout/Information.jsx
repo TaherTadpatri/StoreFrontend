@@ -9,7 +9,7 @@ export const fetchShippingAddress = async (authTokens) => {
   
   try {
     const response = await fetch(
-      "http://localhost:8000/apiv2/getUserAddress/",
+      "https://frameyourmemories.up.railway.app/apiv2/getUserAddress/",
       {
         method: "GET",
         headers: {
@@ -57,7 +57,7 @@ function Information() {
     const fetchAddressDetails = async () => {
       try {
         const response = await fetch(
-          "https://tahertadpatri.pythonanywhere.com/apiv2/getUserAddress/",
+          "https://frameyourmemories.up.railway.app/apiv2/getUserAddress/",
           {
             method: "GET",
             headers: {

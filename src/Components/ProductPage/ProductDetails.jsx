@@ -108,7 +108,7 @@ function ProductDetails({ product }) {
         setCartLoading(true);
         try {
           const response = await fetch(
-            "https://tahertadpatri.pythonanywhere.com/apiv2/addToCart",
+            "https://frameyourmemories.up.railway.app/apiv2/addToCart",
             {
               method: "POST",
               headers: {

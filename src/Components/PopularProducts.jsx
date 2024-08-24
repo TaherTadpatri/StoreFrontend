@@ -16,7 +16,7 @@ function PopularProducts() {
     const fetchcatdata = async () => {
       try {
         const resonse = await fetch(
-          "https://storebackend-production-9a2b.up.railway.app/apiv2/catproducts/",
+          "https://frameyourmemories.up.railway.app/apiv2/catproducts/",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
