@@ -20,7 +20,7 @@ function ProductPage() {
     const fetchProductDetails = async () => {
       try {
         const response = await fetch(
-          `https://tahertadpatri.pythonanywhere.com/api/products/${productId}/`,
+          `https://frameyourmemories.up.railway.app/api/products/${productId}/`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
