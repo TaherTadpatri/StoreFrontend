@@ -12,12 +12,35 @@ export const CartProvider =({children}) =>{
     const {user}=useContext(AuthContext)
     const {authTokens}=useContext(AuthContext)
 
-    let [cart, setCart] = useState(() => (localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : []))
-    let [product, setProduct] = useState(() => (localStorage.getItem('product') ? JSON.parse(localStorage.getItem('product')) : []))
+    const [cart, setCart] = useState(() => {
+      const localStorageCart = localStorage.getItem('cart');
+      console.log(localStorageCart)
+      if (localStorageCart) {
+        try {
+          return JSON.parse(localStorageCart);
+        } catch (error) {
+          console.error("Error parsing stored cart:", error);
+          return []; // Handle parsing errors gracefully
+        }
+      }
+      return [];
+    });
+    const [product, setProduct] = useState(() => {
+      const localStorageProduct = localStorage.getItem('product');
+      if (localStorageProduct) {
+        try {
+          return JSON.parse(localStorageProduct);
+        } catch (error) {
+          console.error("Error parsing stored product:", error);
+          return []; 
+        }
+      }
+      return [];
+    });
     
     useEffect(()=>{ 
         if(user){ 
-              fetchcart();
+             fetchcart();
         }
     },[authTokens])
 

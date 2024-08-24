@@ -10,6 +10,9 @@ function Price({ url ,cat}) {
       try {
         const response = await fetch(url, {
           method: "GET",
+          headers : { 
+            'Content-Type': 'application/json',
+          }
         });
         if (!response.ok) {
           console.log("error fetching details");

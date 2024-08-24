@@ -197,7 +197,7 @@ const NavbarNew = () => {
               }}
             >
               <ShoppingCartIcon />
-              {cart.length > 1 && <Badge> </Badge>}
+              {cart?.length > 1 && <Badge> </Badge>}
             </IconButton>
             <IconButton
               color="inherit"
