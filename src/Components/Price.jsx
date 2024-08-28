@@ -4,11 +4,14 @@ import React, { useEffect, useState } from "react";
 function Price({ url ,cat}) {
   const [price, setprice] = useState();
   const [loading,setloading]=useState(false)
+  console.log(url)
   useEffect(() => {
     setloading(true)
+    const pricepath=url
+    const productId=pricepath.split('/')[5];
     const fetchprice = async () => {
       try {
-        const response = await fetch(url, {
+        const response = await fetch(`https://frameyourmemories.up.railway.app/api/products/${productId}/price/`, {
           method: "GET",
           headers : { 
             'Content-Type': 'application/json',

@@ -1,15 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  Grid,
-  Typography,
-  TextField,
-  Button,
-} from "@mui/material";
+import { Grid, Typography, TextField, Button } from "@mui/material";
 import { Form, useNavigate } from "react-router-dom";
 import AuthContext from "../Context/AuthContext";
 import { Alert } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import CircularProgress from "@mui/material/CircularProgress";
+import cartContext from "../Cart/CartContext";
 
 const stickynavbar = {
   position: "fixed",
@@ -18,15 +14,18 @@ const stickynavbar = {
   right: 0,
   padding: "1rem",
   zIndex: 999,
-  justifyContent : 'flex-end'
+  justifyContent: "flex-end",
 };
+
+
 
 function UserInformation() {
   const navigate = useNavigate();
   const { authTokens, user } = useContext(AuthContext);
   const [loading, setloading] = useState(false);
   const [phoneNumberError, setPhoneNumberError] = useState(null);
-
+  const {cart} =useContext(cartContext)
+  const BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -35,16 +34,17 @@ function UserInformation() {
     line4: "",
     state: "",
     postcode: "",
-    phone_number: "+91",
-    county: "",
+    phone_number: "",
+    country: "https://frameyourmemories.up.railway.app/api/countries/IN/",
     user_id: user.id,
   });
+  const [error,setError]=useState(null)
   useEffect(() => {
     const fetchAddressDetails = async () => {
       setloading(true);
       try {
         const response = await fetch(
-          "https://frameyourmemories.up.railway.app/apiv2/getUserAddress/",
+          "https://frameyourmemories.up.railway.app/api/useraddresses/",
           {
             method: "GET",
             headers: {
@@ -57,16 +57,19 @@ function UserInformation() {
           console.log("error fetching data");
         }
         const data = await response.json();
+        if (data) {
+          data = data[0];
+        }
         const initialFormData = {
-          phone_number: data.formdata?.phone_number || "",
-          first_name: data.formdata?.first_name || "",
-          last_name: data.formdata?.last_name || "",
-          line1: data.formdata?.line1 || "",
-          line2: data.formdata?.line2 || "",
-          state: data.formdata?.state || "",
-          postcode: data.formdata?.postcode || "",
+          phone_number: data?.phone_number || "",
+          first_name: data?.first_name || "",
+          last_name: data?.last_name || "",
+          line1: data?.line1 || "",
+          line2: data?.line2 || "",
+          state: data?.state || "",
+          postcode: data?.postcode || "",
         };
-      
+
         setFormData(initialFormData);
         setloading(false);
       } catch (error) {
@@ -74,7 +77,6 @@ function UserInformation() {
         setloading(false);
       }
     };
-    fetchAddressDetails();
   }, []);
 
   const validatePhoneNumber = (phonenumber) => {
@@ -103,53 +105,108 @@ function UserInformation() {
     console.log(formData);
     try {
       setloading(true);
-      await updateUserinformation();
-      setloading(false);
-      navigate("/payment");
+      const order =await createInitialOrder();
+      if(order){ 
+        setloading(false)
+        navigate (`/payment/${order.number}`) 
+      }
+      else {
+        alert('something went wrong try again') 
+      }
     } catch (error) {
-      console.log("something went wrong");
+      console.log(error);
     }
   };
-  const updateUserinformation = async () => {
-    try {
-      const response = await fetch(
-        "https://tahertadpatri.pythonanywhere.com/apiv2/updateUserAddress/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + String(authTokens.access),
+  const createInitialOrder = async () => {
+   const total = cart.reduce((acc, item) => acc + item.quantity * item.price, 0);
+   const basket_id=cart[0]?.['basket_id']
+   const basket=`${BASE_URL}api/baskets/${basket_id}/`
+   console.log(basket,total)
+   try {
+      const response = await fetch("http://127.0.0.1:8000/api/checkout/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + String(authTokens.access),
+        },
+        body: JSON.stringify({
+          basket :basket,
+          total : total,
+          guest_email :'foo@gmail.com',
+          shipping_address : {
+            first_name: formData.first_name,
+            last_name: formData.last_name,
+            phone_number: formData.phone_number,
+            postcode: formData.postcode,
+            line1: formData.line1,
+            line2: formData.line2,
+            country: formData.country,
+            state: formData.state,
           },
-          body: JSON.stringify({
-            formData: formData,
-          }),
-        }
-      );
+          billing_address :{ 
+            first_name: formData.first_name,
+            last_name: formData.last_name,
+            phone_number: formData.phone_number,
+            postcode: formData.postcode,
+            line1: formData.line1,
+            line2: formData.line2,
+            country: formData.country,
+            state: formData.state, 
+          },
+          shipping_charges: { 
+              currency: "INR",
+              excl_tax: "0",
+              tax: "0"
+          },
+         shipping_method_code :"no-shipping-required",
+        }),
+      });
       if (!response.ok) {
         console.log("error adding address");
       }
       const data = await response.json();
       console.log(data);
+      return data
     } catch (error) {
-      console.log("error with application");
+      if (error.response && error.response.status === 406) {
+        setError('Not acceptable content type. Please ensure the request data is in the correct format.');
+      } else {
+        setError('An error occurred. Please try again later.');
+      }
     }
+    
   };
   return (
     <div>
-      {loading && (<div style={{ 
-        display : 'flex',
-        alignItems  : 'center',
-        justifyContent : 'center',
-        height : '100vh'
-      }}>
-         <CircularProgress/> 
-      </div>)}
+      {loading && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100vh",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
       {!loading && (
-        <Grid container sx={{paddingLeft: '1rem',paddingRight : '1rem',
-          display : 'flex',flexDirection : 'column',alignItems : "center" ,justifyContent : "flex-end"
-        }}>
-          <Grid Item xs={12} lg={8} >
-            <Typography variant="h4" sx ={{paddingTop: '1rem'}}>User Details</Typography>
+        <Grid
+          container
+          sx={{
+            paddingLeft: "1rem",
+            paddingRight: "1rem",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "flex-end",
+          }}
+        >
+          {error && <Grid> <Alert>{error}</Alert> </Grid>}
+          <Grid Item xs={12} lg={8}>
+            <Typography variant="h4" sx={{ paddingTop: "1rem" }}>
+              User Details
+            </Typography>
             <Form onSubmit={(e) => handleSubmit(e)}>
               <TextField
                 id="outlined-uncontrolled-firstname"
@@ -161,6 +218,7 @@ function UserInformation() {
                 fullWidth
                 required
                 margin="normal"
+                autoFocus
               />
 
               <TextField
@@ -223,7 +281,7 @@ function UserInformation() {
                 onChange={(e) => handleChange(e)}
                 fullWidth
                 required
-                autoFocus
+                
                 margin="normal"
               />
 
@@ -250,27 +308,38 @@ function UserInformation() {
                 required
                 margin="normal"
               />
+
+              <TextField
+                id="outlined-uncontrolled-state"
+                label="country"
+                name="country"
+                defaultValue="INDIA"
+                value="INDIA"
+                disabled="true"
+                fullWidth
+                required
+                margin="normal"
+                helperText="currently  available only in india"
+              />
               {loading ? (
-                <div  sx={stickynavbar} >
-                   <CircularProgress />
+                <div sx={stickynavbar}>
+                  <CircularProgress />
                 </div>
-               
               ) : (
-                <div sx={stickynavbar}> 
+                <div sx={stickynavbar}>
                   <Button
-                  sx={{backgroundColor : 'black',
-                    color :'white',
-                    justifyContent : 'flex-end'
-                  }}
-                  type="submit"
-                  variant="contained"
-                  disabled={phoneNumberError}
-                  
-                >
-                  Submit
-                </Button>
+                    sx={{
+                      backgroundColor: "black",
+                      color: "white",
+                      justifyContent: "flex-end",
+                    }}
+                    type="submit"
+                    variant="contained"
+                    disabled={phoneNumberError}
+                  >
+                    Submit
+                  </Button>
                 </div>
-                
               )}
             </Form>
           </Grid>

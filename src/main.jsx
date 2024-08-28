@@ -1,4 +1,5 @@
 import React from "react";
+import dotenv from 'dotenv';
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import About from "./pages/About.jsx";
@@ -102,7 +103,7 @@ const router = createBrowserRouter([
     element: <Catogery />,
   },
   {
-    path: "/payment",
+    path: "/payment/:oscarOrderId",
     element: <PrivateRoute> <Payment /> </PrivateRoute>,
   },
   {

@@ -104,11 +104,14 @@ function ProductDetails({ product }) {
       );
       const productId = productIdsWithSize.map((item) => item.productId);
       const id = parseInt(productId);
+      console.log(id)
+      const url=sizes.length == 0 ? `https://frameyourmemories.up.railway.app/api/products/${params.productId}/` :`https://frameyourmemories.up.railway.app/api/products/${id}/`
+      console.log(url) 
       const addProductToCart = async () => {
         setCartLoading(true);
         try {
           const response = await fetch(
-            "https://frameyourmemories.up.railway.app/apiv2/addToCart",
+            "http://localhost:8000/api/basket/add-product/",
             {
               method: "POST",
               headers: {
@@ -116,8 +119,7 @@ function ProductDetails({ product }) {
                 Authorization: "Bearer " + String(authTokens.access),
               },
               body: JSON.stringify({
-                product_id: sizes.length == 0 ? params.productId : id,
-                parent_id: params.productId,
+                url:url,
                 quantity: 1,
               }),
             }

@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Price from "./Price";
+import PriceComponent from "./PriceComponent";
 const theme = createTheme({
   palette: {
     primary: {
@@ -87,6 +88,7 @@ function ProductCard({ product ,catogery_id }) {
               {shortenedTitle}
             </Typography>
             <Price url={url} cat={true}/> 
+       
           {/*  {customize ? (
               <Button
                 variant="contained"

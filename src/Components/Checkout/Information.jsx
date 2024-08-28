@@ -22,14 +22,15 @@ export const fetchShippingAddress = async (authTokens) => {
       console.log("error fetching data");
     }
     const data = await response.json();
+    if(data){data=data[0]}    
     const initialFormData = {
-      phone_number: data.formdata?.phone_number || "",
-      first_name: data.formdata?.first_name || "",
-      last_name: data.formdata?.last_name || "",
-      line1: data.formdata?.line1 || "",
-      line2: data.formdata?.line2 || "",
-      state: data.formdata?.state || "",
-      postcode: data.formdata?.postcode || "",
+      phone_number: data?.phone_number || "",
+      first_name: data?.first_name || "",
+      last_name: data?.last_name || "",
+      line1: data?.line1 || "",
+      line2: data?.line2 || "",
+      state: data?.state || "",
+      postcode: data?.postcode || "",
     };
 
     return initialFormData
@@ -57,7 +58,7 @@ function Information() {
     const fetchAddressDetails = async () => {
       try {
         const response = await fetch(
-          "https://frameyourmemories.up.railway.app/apiv2/getUserAddress/",
+          "https://frameyourmemories.up.railway.app/api/useraddresses/",
           {
             method: "GET",
             headers: {
@@ -70,14 +71,15 @@ function Information() {
           console.log("error fetching data");
         }
         const data = await response.json();
+        if (data) {data=data[0]}
         const initialFormData = {
-          phone_number: data.formdata?.phone_number || "",
-          first_name: data.formdata?.first_name || "",
-          last_name: data.formdata?.last_name || "",
-          line1: data.formdata?.line1 || "",
-          line2: data.formdata?.line2 || "",
-          state: data.formdata?.state || "",
-          postcode: data.formdata?.postcode || "",
+          phone_number: data?.phone_number || "",
+          first_name: data?.first_name || "",
+          last_name: data?.last_name || "",
+          line1: data?.line1 || "",
+          line2: data?.line2 || "",
+          state: data?.state || "",
+          postcode: data?.postcode || "",
         };
 
         setFormData(initialFormData);

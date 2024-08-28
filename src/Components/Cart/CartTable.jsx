@@ -1,8 +1,10 @@
 import {
   Box,
-  CircularProgress,
+  Button,
   Container,
+  Grid,
   Paper,
+  Tab,
   Table,
   TableBody,
   TableCell,
@@ -10,112 +12,97 @@ import {
   TableHead,
   TableRow,
   Typography,
+  linkClasses,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import React, { useContext, useEffect, useState } from "react";
 import ProductQuantity from "./ProductQuantity";
 import cartContext from "./CartContext";
+import AuthContext from "../Context/AuthContext";
 
 function CartTable() {
   const [CartItems, setCart] = useState([]);
+  const { cart, product, lines, loading } = useContext(cartContext);
+  const [total, setTotal] = useState();
+  const { authTokens } = useContext(AuthContext);
+  const BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 
-  const { cart, product } = useContext(cartContext);
+  const productDetails= lines.map ((line)=>{ 
+     const correctproduct=product.find((p)=>p.url === lines.product)
+     console.log(correctproduct)
+     const details={ 
+      title :correctproduct?.title,
+      price : line.price_excl_tax,
+      quantity : line.quantity,
+      price_excluding_tax :line.price_excl_tax,
+      price_including_tax :line.price_incl_tax,
+     }
+  })
 
-  var totalAmount = 0;
-  useEffect(() => {
-    const storecart = localStorage.getItem("cart");
-    if (storecart) {
-      const parsedcart = JSON.parse(storecart);
-      setCart(parsedcart);
-    }
-   
-  }, [cart]);
+  const findproductDetails = (line)=>{ 
+    return product.find((p)=> p.url == line.product) 
+  }
 
-  const getProductDetails = (productId) => {
-    return product.find((product) => product.id === productId);
-  };
-  totalAmount = cart.reduce((accumulator, currentItem) => {
-    const itemTotal = currentItem.quantity * currentItem.price_incl_tax;
-    return accumulator + parseInt(itemTotal, 10); 
-  }, 0);
   return (
-    <div>
-      <Typography variant="h3" sx={{paddingLeft : '1rem'}}>Cart</Typography>
-      {cart && cart.length > 0 ? (
-        <TableContainer component={Container} elevation={3}>
-          <Table>
-            <TableHead>
-              <TableCell>
-                <Typography variant="h5" >
-                  Product
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="h5" >
-                  Quantity
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="h5" >
-                  Price
-                </Typography>
-              </TableCell>
-            </TableHead>
-            <TableBody>
-              {cart.filter((index) => index.quantity > 0).map((item, index) => (
-                  <TableRow key={item.id}>
+    <Grid container maxWidth="lg" justifyContent="center">
+      <Grid item="sx">
+
+        {loading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+              width  : '100%'
+            }}
+          >
+            <CircularProgress />
+          </div>
+        ) : (
+          <Grid>
+            <Table>
+              <TableContainer>
+                <TableHead>
+                  <TableRow>
                     <TableCell>
-                      <img
-                        src={getProductDetails(item.product)?.image}
-                        alt=""
-                        style={{
-                          height: "50px",
-                          widht: "100%",
-                          objectFit: "cover",
-                          aspectRatio: "4/3",
-                        }}
-                      />
-                      <br />
-                      <Typography variant="body2" color="text.secondary">
-                        {getProductDetails(item.product)?.title}
+                      <Typography variant="h6" color="inherit">
+                        Name
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <ProductQuantity
-                        quantity={item.quantity}
-                        ProductId={item.product}
-                      />
+                      <Typography variant="h6" color="inherit">
+                        Quantity
+                      </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="h5" color="green" >
-                        <Box> ₹{item.quantity * item.price_incl_tax}{" "}</Box>
-                        
+                      <Typography variant="h6" color="inherit">
+                        Price
                       </Typography>
                     </TableCell>
                   </TableRow>
+                </TableHead>
+
+                {cart?.map((line) => (
+                <TableRow key={line.id}>
+             
+                   
+                    <TableCell>
+                    <img src={`${BASE_URL}${line.images[0].original}` } /><Typography>{line?.title}</Typography></TableCell>
+                    <TableCell><Typography>{line.quantity}</Typography><br/><Typography>*Cusotmization products can only be one</Typography>
+                     <Button variant="outlined" sx={{textDecoration : 'none'}}>Remove</Button>
+                    </TableCell>
+                    <TableCell>{line.price} INR</TableCell>
+                 
+               
+              </TableRow>
                 ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      ) : (
-        <></>
-      )}
-      <Typography
-        variant="h4"
-        sx={{
-          display: "flex",
-         justifyContent: "center",
-         alignItems: "center",
-          marginTop: "1rem",
-          marginRight: "1rem",
-        }}
-      >
-        {cart && cart.length > 0 && (<>
-       
-        Total Amount : ₹{totalAmount}
-       
-       {" "}</>) }
-      </Typography>
-    </div>
+              </TableContainer>
+            </Table>
+          </Grid>
+        )}
+      </Grid>
+    </Grid>
   );
 }
 

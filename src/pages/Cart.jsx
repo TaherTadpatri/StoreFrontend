@@ -17,34 +17,33 @@ const stickynavbar = {
   bottom: 0,
   left: 0,
   right: 1,
-  backgroundColor: "black",
+  backgroundColor: "white",
   padding: "1rem",
   float: 'right',
   zIndex: 999,
   justifyContent : 'flex-end'
 };
 function Cart() {
-  const { cart, product, updatecart, fetchcart } = useContext(cartContext);
+  const { cart, product, updatecart, fetchcart ,loading } = useContext(cartContext);
 
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const { user, authTokens } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-   
+    
       fetchcart();
 
-  }, []);
+  }, [authTokens]);
 
   const handleContinueShoping = (e) => {
-    updatecart();
+  
     navigate(-1);
   };
   const handleCheckout = (e) => {
     e.preventDefault();
-    updatecart();
+ 
     navigate("/checkout");
   };
 
@@ -58,56 +57,58 @@ function Cart() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         ></motion.div>
-        {cart && cart.length === 0 && (
+        {cart.length > 0  ? (
           <>
-            <Grid container>
-              <Grid
-                item
-                xs={12}
-                lg={12}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: "100vh",
-                }}
-              >
-                <ShoppingCartIcon
-                  sx={{ height: "200px", width: "100%" }}
-                  color="primary"
-                />
-
-                <Typography
-                  variant="h4"
-                  color="primary"
-                  sx={{ marginBottom: "1rem" }}
-                >
-                  {" "}
-                  your cart is empty
-                </Typography>
-
-                <Button
-                  variant="contained"
-                  onClick={(e) => handleContinueShoping(e)}
-                  sx={{
-                    textTransform: "none",
-                    fontSize: "1rem",
-                    borderRadius: "10px",
-                  }}
-                >
-                  continue Shopping
-                </Button>
+            <CartTable />{" "}
+            <Grid container> 
+              <Grid item> 
+              {cart && (<Grid> 
+                 
+                </Grid>)}
               </Grid>
             </Grid>
           </>
-        )}
-        {cart && cart.length > 0 && product && (
-          <>
-            <CartTable />{" "}
-          </>
-        )}
-        {cart && cart.length > 0 ? (
+        ) : ( loading && <Grid container>
+          <Grid
+            item
+            xs={12}
+            lg={12}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100vh",
+            }}
+          >
+            <ShoppingCartIcon
+              sx={{ height: "200px", width: "100%" }}
+              color="primary"
+            />
+
+            <Typography
+              variant="h4"
+              color="primary"
+              sx={{ marginBottom: "1rem" }}
+            >
+              {" "}
+              your cart is empty
+            </Typography>
+
+            <Button
+              variant="contained"
+              onClick={(e) => handleContinueShoping(e)}
+              sx={{
+                textTransform: "none",
+                fontSize: "1rem",
+                borderRadius: "10px",
+              }}
+            >
+              continue Shopping
+            </Button>
+          </Grid>
+        </Grid>)}   
+        {cart && cart.length >= 1   ? (
           <>
             <Grid container sx={stickynavbar}>
               {" "}
@@ -123,6 +124,7 @@ function Cart() {
                   backgroundColor: 'white',
                 }}
                 onClick={(e) => handleContinueShoping(e)}
+                disabled={loading}
               >
                 continue shopping
               </Button>
@@ -135,9 +137,10 @@ function Cart() {
                   fontSize: "1rem",
                   borderRadius: "10px",
                   marginLeft: "1rem",
-                  color: "black",
-                  backgroundColor: 'white',
+                  color: "white",
+                  backgroundColor : 'black'
                 }}
+                disabled={loading}
               >
                 Check out
               </Button>
