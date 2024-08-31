@@ -5,7 +5,7 @@ import Price from "../Price";
 import Optionselection from "../Optionselection";
 import Productdescription from "../Productdescription";
 import ImageUpload from "../ImageUpload";
-import { Box, CircularProgress } from "@mui/material";
+import { Alert, Box, CircularProgress } from "@mui/material";
 import {
   Grid,
   Card,
@@ -58,10 +58,11 @@ function ProductDetails({ product }) {
   const [priceUrls, setPriceUrls] = useState([]);
   const [sizeSelected, setSelectedSize] = useState();
   const [productIds, setProductIds] = useState();
-
+  const [error,setError]=useState(null)
   const title = product.title;
   const description = product.description;
   const navigate = useNavigate();
+  const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 
   const isCustomizable = product.attributes.find(
     (attribute) => attribute.code === "keycustomize"
@@ -80,7 +81,7 @@ function ProductDetails({ product }) {
       )?.value;
       return { productId: product.id, size: size };
     });
-    
+
     const allSizes = variants.map((product) => {
       const size = product.attributes?.find(
         (attribute) => attribute.code === "sizes"
@@ -104,35 +105,37 @@ function ProductDetails({ product }) {
       );
       const productId = productIdsWithSize.map((item) => item.productId);
       const id = parseInt(productId);
-      console.log(id)
-      const url=sizes.length == 0 ? `https://frameyourmemories.up.railway.app/api/products/${params.productId}/` :`https://frameyourmemories.up.railway.app/api/products/${id}/`
-      console.log(url) 
+      console.log(id);
+      const url =
+        sizes.length == 0
+          ? `${BACKEND_BASE_URL}api/products/${params.productId}/`
+          : `${BACKEND_BASE_URL}api/products/${id}/`;
+      console.log(url);
+      const product_id= sizes.length== 0 ? params.productId : id
       const addProductToCart = async () => {
         setCartLoading(true);
         try {
-          const response = await fetch(
-            "http://localhost:8000/api/basket/add-product/",
-            {
-              method: "POST",
-              headers: {
-                "content-Type": "application/json",
-                Authorization: "Bearer " + String(authTokens.access),
-              },
-              body: JSON.stringify({
-                url:url,
-                quantity: 1,
-              }),
-            }
-          );
+          const response = await fetch(`${BACKEND_BASE_URL}apiv2/cart/`, {
+            method: "POST",
+            headers: {
+              "content-Type": "application/json",
+              Authorization: "Bearer " + String(authTokens.access),
+            },
+            body: JSON.stringify({
+              product_id: product_id,
+              quantity: 1,
+            }),
+          });
           if (!response.ok) {
-            console.log("error adding to cart");
+            throw new Error(response.statusText)
           }
           const data = await response.json();
 
           setCartLoading(false);
           navigate("/cart");
         } catch (error) {
-          console.log("error");
+          setError('something went wrong try again') 
+          setCartLoading(false)
         } finally {
           setCartLoading(false);
         }
@@ -237,6 +240,7 @@ function ProductDetails({ product }) {
                     )}
                   </Button>
                 )}
+                {error && <Alert severity="error"> {error}</Alert>}
                 <Productdescription attributes={product.attributes} />
               </CardContent>
             </Grid>

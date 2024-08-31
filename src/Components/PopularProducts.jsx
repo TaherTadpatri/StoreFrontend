@@ -10,13 +10,13 @@ function PopularProducts() {
   const Popularcat = 2;
   const [loading, setloading] = useState(false);
   const [items, setitems] = useState();
-
+  const BACKEND_BASE_URL=import.meta.env.VITE_BACKEND_BASE_URL
   useEffect(() => {
     setloading(true);
     const fetchcatdata = async () => {
       try {
         const resonse = await fetch(
-          "https://frameyourmemories.up.railway.app/apiv2/catproducts/",
+          `${BACKEND_BASE_URL}/apiv2/catproducts/`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

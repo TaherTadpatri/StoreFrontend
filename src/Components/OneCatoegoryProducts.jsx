@@ -9,13 +9,13 @@ function OneCatoegoryProducts() {
   const trendingProductCategory = 1;
   const [loading, setloading] = useState(false);
   const [items, setitems] = useState();
-
+  const BASE_URL=import.meta.env.VITE_BACKEND_BASE_URL
   useEffect(() => {
     setloading(true);
     const fetchcatdata = async () => {
       try {
         const resonse = await fetch(
-          "https://frameyourmemories.up.railway.app/apiv2/catproducts/",
+          `${BASE_URL}apiv2/catproducts/`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

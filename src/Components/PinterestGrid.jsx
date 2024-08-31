@@ -19,11 +19,12 @@ function PinterestGrid() {
   const [loading, setLoading] = useState(false);
   const theme = useTheme();
   const [items, setitem] = useState();
+  const BACKEND_BASE_URL=import.meta.env.VITE_BACKEND_BASE_URL
   useEffect(() => {
     setLoading(true);
     const fetchdata = async () => {
       try {
-        const response = await fetch("https://frameyourmemories.up.railway.app/api/categories/", {
+        const response = await fetch(`${BACKEND_BASE_URL}api/categories/`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });

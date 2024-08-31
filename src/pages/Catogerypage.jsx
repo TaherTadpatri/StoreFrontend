@@ -12,12 +12,13 @@ function Catogerypage() {
   const catogery_id = catogeryid.catogeryid;
   console.log(catogery_id);
   const [items, setitems] = useState();
+  const BACKEND_BASE_URL=import.meta.env.VITE_BACKEND_BASE_URL
   useEffect(() => {
     const fetchcatdata = async () => {
       setloading(true);
       try {
         const resonse = await fetch(
-          "https://frameyourmemories.up.railway.app/apiv2/catproducts/",
+          `${BACKEND_BASE_URL}apiv2/catproducts/`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -71,8 +72,12 @@ function Catogerypage() {
                 }}
               >
                 <CircularProgress />
+                <Typography>hang on loading...</Typography>
               </div>
             )}
+            {items && items.length === 0 && <Grid> 
+               <Typography>coming soon</Typography>
+              </Grid>}
             {items && (
               <Grid container spacing={2} color="primary" sx={{ backgroundColor: "#EDEADE" ,paddingTop : '2rem'}}>
                 {items.map((product, _) => (

@@ -1,7 +1,6 @@
 import { createContext, useState, useEffect, useContext } from 'react'
 import {jwtDecode} from 'jwt-decode';
 
-import cartContext from '../Cart/CartContext';
 
 
 const AuthContext = createContext()
@@ -10,7 +9,7 @@ export default AuthContext;
 
 export const AuthProvider = ({children}) => {
     
-
+    const BACKEND_BASE_URL=import.meta.env.VITE_BACKEND_BASE_URL
     let [user, setUser] = useState(() => (localStorage.getItem('authTokens') ? jwtDecode(localStorage.getItem('authTokens')) : null))
     let [authTokens, setAuthTokens] = useState(() => (localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null))
     let [loading, setLoading] = useState(true)
@@ -20,7 +19,7 @@ export const AuthProvider = ({children}) => {
     const loginUser = async (e) => {
         e.preventDefault()
         try{
-            const response = await fetch('https://frameyourmemories.up.railway.app/api/token/', {
+            const response = await fetch(`${BACKEND_BASE_URL}api/token/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -54,7 +53,7 @@ export const AuthProvider = ({children}) => {
     }
 
     const updateToken = async () => {
-        const response = await fetch('https://frameyourmemories.up.railway.app/api/token/refresh/', {
+        const response = await fetch(`${BACKEND_BASE_URL}api/token/refresh/`, {
             method: 'POST',
             headers: {
                 'Content-Type':'application/json'
@@ -86,10 +85,13 @@ export const AuthProvider = ({children}) => {
         authTokens:authTokens,
         loginUser:loginUser,
         logoutUser:logoutUser,
+        BACKEND_BASE_URL : BACKEND_BASE_URL,
     }
 
     useEffect(()=>{
-       
+       if(loading){ 
+         updateToken()
+       }
         const REFRESH_INTERVAL = 1000 * 60 *5  // 5 minutes
         let interval = setInterval(()=>{
             if(authTokens){

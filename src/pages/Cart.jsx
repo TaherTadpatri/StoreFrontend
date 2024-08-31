@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "../Components/Context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Button, Icon, Typography } from "@mui/material";
+import { Button, CircularProgress, Icon, Typography } from "@mui/material";
 
 import CartTable from "../Components/Cart/CartTable";
 import NavbarNew from "../Components/NavbarNew";
@@ -33,7 +33,7 @@ function Cart() {
 
   useEffect(() => {
     
-      fetchcart();
+       fetchcart();
 
   }, [authTokens]);
 
@@ -42,7 +42,7 @@ function Cart() {
     navigate(-1);
   };
   const handleCheckout = (e) => {
-    e.preventDefault();
+  e.preventDefault();
  
     navigate("/checkout");
   };
@@ -57,6 +57,11 @@ function Cart() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         ></motion.div>
+        {loading && <Grid container sx={{display : 'flex',flexDirection :  'column',alignItems  : 'center', justifyContent : 'center' ,height : '100vh'
+        }}> 
+            <CircularProgress/>
+            <Typography>Hang on loading...</Typography>
+          </Grid>}
         {cart.length > 0  ? (
           <>
             <CartTable />{" "}
@@ -68,7 +73,7 @@ function Cart() {
               </Grid>
             </Grid>
           </>
-        ) : ( loading && <Grid container>
+        ) : ( !loading && cart.length ===0 &&  <Grid container>
           <Grid
             item
             xs={12}

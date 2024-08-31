@@ -13,13 +13,14 @@ import { ListItem } from "@mui/material";
 function Carsoulmui(props) {
   const [items, setItem] = useState();
   const [isDesktop, setDesktop] = useState(window.innerWidth >= 768);
+  const BACKEND_BASE_URL=import.meta.env.VITE_BACKEND_BASE_URL
   useEffect(() => {
     const handleResize = () => setDesktop(window.innerWidth >= 768);
     window.addEventListener("resize", handleResize);
 
     const fetchdata = async () => {
       try {
-        const resonse = await fetch("https://frameyourmemories.up.railway.app/apiv2/caursol/", {
+        const resonse = await fetch(`${BACKEND_BASE_URL}apiv2/caursol/`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -58,7 +59,8 @@ function Carsoulmui(props) {
 }
 
 function Item(props) {
-  const imageUrl = `https://frameyourmemories.up.railway.app${props.item.image}`;
+  const BACKEND_BASE_URL=import.meta.env.VITE_BACKEND_BASE_URL
+  const imageUrl = `${BACKEND_BASE_URL}${props.item.image}`;
 
 
   return (
@@ -84,7 +86,8 @@ function Item(props) {
 }
 
 function DesktopItem(props) {
-  const imageUrl = `https://frameyourmemories.up.railway.app${props.item.image}`;
+  const BACKEND_BASE_URL=import.meta.env.VITE_BACKEND_BASE_URL
+  const imageUrl = `${BACKEND_BASE_URL}${props.item.image}`;
 
   return (
     <Grid container>
